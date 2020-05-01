@@ -1,5 +1,5 @@
-<h1 align="center"> Coordinate Analyzer </h1> <br>
-<h2 aling="center"> Locale.AI Frontend Task </h2> <br>
+<h1 align="center"> Coordinate Analyzer </h1>
+<h3 align="center"><b> Locale.AI Frontend Task </b></h3> 
 <p align="center">
 </p>
 
