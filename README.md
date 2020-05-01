@@ -28,8 +28,6 @@
 ![image](https://user-images.githubusercontent.com/35633575/80803765-e6ceea80-8bd0-11ea-9b72-58393ed30027.png)
 
 
-## [Usage](https://github.com/coderrsid/BurgerMakerApp
-
 ## Built with
 
 - [ReactJS](https://reactjs.org/) - React makes it painless to create interactive UIs. Design simple views for each state in your application, and React will efficiently update and render just the right components when your data changes.
