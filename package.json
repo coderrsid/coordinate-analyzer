@@ -3,12 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@nivo/bar": "^0.61.1",
+    "@nivo/pie": "^0.61.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "papaparse": "^5.2.0",
     "react": "^16.13.1",
+    "react-awesome-button": "^6.5.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-map-gl": "^5.2.5",
+    "react-scripts": "3.4.1",
+    "supercluster": "^7.0.0",
+    "use-state-with-callback": "^1.0.18",
+    "use-supercluster": "^0.2.6"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -30,5 +38,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5"
   }
 }

@@ -1,0 +1,11 @@
+.barContainer {
+	width: 50%;
+	height: 90%;
+	margin: 10px 10px;
+	overflow: hidden;
+}
+
+.barContainer > div {
+	width: 100%;
+	height: 70%;
+}
