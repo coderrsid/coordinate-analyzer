@@ -1,68 +1,47 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h1 align="center"> Coordinate Analyzer </h1>
+<h3 align="center"><b> Locale.AI Frontend Task </b></h3> 
+<p align="center">
+</p>
 
-## Available Scripts
+<table>
+	<tr>
+		<td>
+			It is task to create a front-end application where the user can upload a CSV, select the Latitude and Longitude column of the CSV and then view all the points on the map and also creates a basic visualization of the data against each other by creating a pie chart of different type of travel of booking created and bar chart of different type of medium of booking done.
+		</td>
+	</tr>
+</table>
 
-In the project directory, you can run:
+Data (for usage) - https://drive.google.com/file/d/1kkuh2WShXBpR7R_qJVpI0X6ukgNn8QVR/view?usp=sharing <br>
+Note - Right now, map has only maximum 500 marked point limit. 
 
-### `yarn start`
+### Demo : https://coordinate-analyzer.coderrsid.now.sh/
+## Project Screenshots
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Home Page
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+![image](https://user-images.githubusercontent.com/35633575/80803657-9eafc800-8bd0-11ea-8695-99c1b96db00d.png)
 
-### `yarn test`
+### < SCROLL DOWN >
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Marked Map
 
-### `yarn build`
+![image](https://user-images.githubusercontent.com/35633575/80803743-da4a9200-8bd0-11ea-95f0-93876ebc28fa.png)
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Visualization of Data
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+![image](https://user-images.githubusercontent.com/35633575/80803765-e6ceea80-8bd0-11ea-9b72-58393ed30027.png)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+## Built with
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- [ReactJS](https://reactjs.org/) - React makes it painless to create interactive UIs. Design simple views for each state in your application, and React will efficiently update and render just the right components when your data changes.
+- [Mapbox-gl-js](https://github.com/mapbox/mapbox-gl-js) - Mapbox GL JS is a JavaScript library for interactive, customizable vector maps on the web. It takes map styles that conform to the Mapbox Style Specification, applies them to vector tiles that conform to the Mapbox Vector Tile Specification, and renders them using WebGL.
+- [Nivo Charts](https://github.com/plouc/nivo) - nivo provides supercharged React components to easily build dataviz apps, it's built on top of d3. Several libraries already exist for React d3 integration, but just a few provide server side rendering ability and fully declarative charts.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## To-do
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Add filters component to show filtered markers on map
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Developer
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+[Siddhant Sehgal](https://github.com/coderrsid)
