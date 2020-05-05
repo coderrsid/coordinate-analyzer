@@ -1,13 +1,93 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import './MarkerMap.css';
 import ReactMapGL, { Marker, FlyToInterpolator, Popup } from 'react-map-gl';
 import useSupercluster from 'use-supercluster';
 import MarkerLogo from '../../assets/marker.svg';
 
 const MarkerMap = (props) => {
-	const data = props.mapData;
+	const data = props.mapData.slice(0, 2000);
 	const mapRef = useRef();
-	let mapData = data ? data.slice(0, 500) : [];
+	let [ mapData, handleData ] = useState([]);
+	let [ mediumFilter, handleMediumFilter ] = useState();
+	let [ categoryFilter, handleCategoryFilter ] = useState();
+	let [ clearFilters, handleClearFilters ] = useState(false);
+	const onPropsChange = useCallback(
+		() => {
+			handleMediumFilter(props.mediumChange);
+			handleCategoryFilter(props.categoryChange);
+		},
+		[props.mediumChange, props.categoryChange],
+	)
+
+	useMemo(
+		() => {
+			let filteredData = [];
+			if(categoryFilter) {
+				filteredData =
+					categoryFilter === 'Point to Point'
+						? data.filter((data) => {
+								return data.category === 'Point to Point';
+							})
+						: categoryFilter === 'Hourly Rental'
+							? data.filter((data) => {
+									return data.category === 'Hourly Rental';
+								})
+							: categoryFilter === 'Long Distance'
+								? data.filter((data) => {
+										return data.category === 'Long Distance';
+									})
+								: data;
+				if(mediumFilter) {
+					filteredData =
+					mediumFilter === 'Web'
+						? filteredData.filter((data) => {
+								return data.web === '1';
+							})
+						: mediumFilter === 'Mobile'
+							? filteredData.filter((data) => {
+									return data.mobile === '1';
+								})
+							: filteredData;
+				}
+			} else if(mediumFilter) {
+					filteredData =
+					mediumFilter === 'Web'
+						? data.filter((data) => {
+								return data.web === '1';
+							})
+						: mediumFilter === 'Mobile'
+							? data.filter((data) => {
+									return data.mobile === '1';
+								})
+							: data;
+			} else {
+				filteredData = data;
+			}
+
+			console.log(categoryFilter, mediumFilter, filteredData);
+			handleData(filteredData);
+		},
+		[ categoryFilter, mediumFilter]
+	);
+
+	useMemo(
+		() => {
+			if (clearFilters) {
+				handleMediumFilter("");
+				handleCategoryFilter("");
+				handleClearFilters(!clearFilters);
+			}
+		},
+		[ clearFilters ]
+	);
+
+	useMemo(
+		() => {
+			console.log('marked map props changed');
+			handleMediumFilter(props.mediumChange);
+			handleCategoryFilter(props.categoryChange);
+		}
+	, [props.mediumChange, props.categoryChange])
 
 	useEffect(() => {
 		const listener = (e) => {
@@ -21,17 +101,29 @@ const MarkerMap = (props) => {
 		};
 	});
 
+	useEffect(() => {
+		// mediumFilterChange(props.mediumChange);
+		// categoryFilterChange(props.categoryChange);
+	});
+
 	const [ viewport, setViewport ] = useState({
 		latitude: parseFloat(data[0].latitude),
 		longitude: parseFloat(data[0].longitude),
 		width: '100%',
-		height: '100%',
-		zoom: 6
+		height: '80%',
+		zoom: 10
 	});
 
 	const [ selectedLoc, setSelectedLoc ] = useState(null);
 
-	const points = mapData.map((data) => ({
+	const points = mapData ? mapData.map((data) => ({
+		type: 'Feature',
+		properties: { cluster: false, dataId: data.id, category: data.category },
+		geometry: {
+			type: 'Point',
+			coordinates: [ parseFloat(data.longitude), parseFloat(data.latitude) ]
+		}
+	})) : data.map((data) => ({
 		type: 'Feature',
 		properties: { cluster: false, dataId: data.id, category: data.category },
 		geometry: {
@@ -46,19 +138,20 @@ const MarkerMap = (props) => {
 		points,
 		bounds,
 		zoom: viewport.zoom,
-		options: { radius: 75, maxZoom: 17 }
+		options: { radius: 75, maxZoom: 18 }
 	});
 	return (
 		<div className="mapContainer">
 			<ReactMapGL
+				className="map"
 				{...viewport}
-				maxZoom={17}
+				maxZoom={18}
 				mapboxApiAccessToken={
 					'pk.eyJ1IjoiY29kZXJyc2lkIiwiYSI6ImNrOWlyZHBmYzBibm8za3FsdG56ajE5c2QifQ.ho5n63DYciCXvzfzTD6qbA'
 				}
 				mapStyle="mapbox://styles/coderrsid/ck9jqy9i10v2c1jrrwikzkji0"
-				onViewportChange={(newViewport) => {
-					setViewport({ ...newViewport });
+				onViewportChange={(viewport) => {
+					setViewport(viewport);
 				}}
 				ref={mapRef}
 			>
@@ -72,13 +165,13 @@ const MarkerMap = (props) => {
 								<div
 									className="cluster-marker"
 									style={{
-										width: `${10 + pointCount / points.length * 40}px`,
-										height: `${10 + pointCount / points.length * 40}px`
+										width: `${10 + pointCount / points.length * 20}px`,
+										height: `${10 + pointCount / points.length * 20}px`
 									}}
 									onClick={() => {
 										const expansionZoom = Math.min(
 											supercluster.getClusterExpansionZoom(cluster.id),
-											20
+											25
 										);
 
 										setViewport({
@@ -99,8 +192,8 @@ const MarkerMap = (props) => {
 						);
 					}
 
-					if (isCluster && viewport.zoom >= 15) {
-						const points = isCluster ? supercluster.getLeaves(cluster.id, Infinity) : null;
+					if (viewport.zoom >= 15) {
+						const points = isCluster ? supercluster.getLeaves(cluster.id) : null;
 						if (points) {
 							points.map((point) => {
 								return (
@@ -114,7 +207,6 @@ const MarkerMap = (props) => {
 											onClick={(e) => {
 												e.preventDefault();
 												setSelectedLoc(point);
-												console.log(point);
 											}}
 										>
 											<img src={MarkerLogo} alt="marked" />
@@ -132,7 +224,6 @@ const MarkerMap = (props) => {
 								onClick={(e) => {
 									e.preventDefault();
 									setSelectedLoc(cluster);
-									console.log(cluster);
 								}}
 							>
 								<img src={MarkerLogo} alt="marked" />
@@ -155,6 +246,32 @@ const MarkerMap = (props) => {
 					</Popup>
 				) : null}
 			</ReactMapGL>
+			<div className="filtersContainer">
+				<div className="bg-image" />
+				<h2>Filter Data</h2>
+				<div className="filter">
+					<h3>Medium</h3>
+					<select onChange={(e) => handleMediumFilter(e.target.value)} value={mediumFilter}>
+						<option value="">Select Medium</option>
+						<option value="Web">Web</option>
+						<option value="Mobile">Mobile</option>
+					</select>
+				</div>
+				<div className="filter">
+					<h3>Travel Category</h3>
+					<select onChange={(e) => handleCategoryFilter(e.target.value)} value={categoryFilter}>
+						<option value="">Select Category</option>
+						<option value="Point to Point">Point to Point</option>
+						<option value="Hourly Rental">Hourly Rental</option>
+						<option value="Long Distance">Long Distance</option>
+					</select>
+				</div>
+				<div>
+					<button onClick={() => handleClearFilters(!clearFilters)}>
+						<span>Clear all filters</span>
+					</button>
+				</div>
+			</div>
 		</div>
 	);
 };

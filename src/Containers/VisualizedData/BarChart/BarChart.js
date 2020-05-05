@@ -6,8 +6,7 @@ export default class BarChart extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			web: false,
-			mobile: false
+			medium: ''
 		};
 	}
 
@@ -42,11 +41,12 @@ export default class BarChart extends Component {
 		let category = e['id'];
 
 		if (category === 'Web') {
-			this.setState({ web: !this.state.web });
+			this.setState({ medium: 'Web' });
 		} else if (category === 'Mobile') {
-			this.setState({ mobile: !this.state.mobile });
+			this.setState({ medium: 'Mobile' });
 		}
-		this.props.mapMediumChange(this.state);
+		console.log(this.state.medium);
+		this.props.mapMediumChange(this.state.medium);
 	};
 
 	render() {

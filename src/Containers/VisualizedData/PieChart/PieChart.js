@@ -6,9 +6,7 @@ export default class PieChart extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			p2p: false,
-			hourly: false,
-			long: false
+			category: '',
 		};
 	}
 
@@ -52,13 +50,13 @@ export default class PieChart extends Component {
 		let category = e['id'];
 
 		if (category === 'Long Distance') {
-			this.setState({ long: !this.state.long });
+			this.setState({ category: 'Long Distance' });
 		} else if (category === 'Point to Point') {
-			this.setState({ p2p: !this.state.p2p });
+			this.setState({ category: 'Point to Point' });
 		} else if (category === 'Hourly Rental') {
-			this.setState({ hourly: !this.state.hourly });
+			this.setState({ category: 'Hourly Rental' });
 		}
-		this.props.mapCategoryChange(this.state);
+		this.props.mapCategoryChange(this.state.category);
 	};
 
 	render() {

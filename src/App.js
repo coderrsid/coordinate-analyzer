@@ -10,8 +10,8 @@ class App extends Component {
 		this.state = {
 			data: '',
 			uploaded: false,
-			categoryChange: {},
-			mediumChange: {}
+			categoryChange: '',
+			mediumChange: ''
 		};
 	}
 
@@ -25,10 +25,12 @@ class App extends Component {
 
 	handleCategoryChange = (state) => {
 		this.setState({ categoryChange: state });
+		console.log(this.state.categoryChange);
 	};
 
 	handleMediumChange = (state) => {
 		this.setState({ mediumChange: state });
+		console.log(this.state.mediumChange);
 	};
 
 	render() {
@@ -40,8 +42,6 @@ class App extends Component {
 				{this.state.data.length ? (
 					<div className="map">
 						<MarkedMap
-							handleCategoryChange={this.handleCategoryChange}
-							handleMediumChange={this.handleMediumChange}
 							categoryChange={this.state.categoryChange}
 							mediumChange={this.state.mediumChange}
 							scrollView={this.state.uploaded}
@@ -52,8 +52,8 @@ class App extends Component {
 				{this.state.data.length ? (
 					<div className="visual">
 						<VisualizedData
-							mapCategoryChange={this.handleCategoryChange}
-							mapMediumChange={this.handleMediumChange}
+							mapCategoryChange={(state) => this.setState({categoryChange: state})}
+							mapMediumChange={(state) => this.setState({mediumChange: state})}
 							mapData={this.state.data}
 						/>
 					</div>
