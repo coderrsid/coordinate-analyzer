@@ -12,7 +12,7 @@
 </table>
 
 Data (for usage) - https://drive.google.com/file/d/1kkuh2WShXBpR7R_qJVpI0X6ukgNn8QVR/view?usp=sharing <br>
-Note - Right now, map has only maximum 500 marked point limit. 
+Note - Right now, map has only maximum 2000 marked point limit. 
 
 ### Demo : https://coordinate-analyzer.coderrsid.now.sh/
 ## Project Screenshots
@@ -21,11 +21,9 @@ Note - Right now, map has only maximum 500 marked point limit.
 
 ![image](https://user-images.githubusercontent.com/35633575/80803657-9eafc800-8bd0-11ea-8695-99c1b96db00d.png)
 
-### < SCROLL DOWN >
-
 ### Marked Map
 
-![image](https://user-images.githubusercontent.com/35633575/80803743-da4a9200-8bd0-11ea-95f0-93876ebc28fa.png)
+![image](https://user-images.githubusercontent.com/35633575/81278499-61858300-9073-11ea-8f45-6aa50bdc6bc5.png)
 
 ### Visualization of Data
 
@@ -40,7 +38,9 @@ Note - Right now, map has only maximum 500 marked point limit.
 
 ## To-do
 
-- Add filters component to show filtered markers on map
+- <s>Add filters component to show filtered markers on map</s>
+- <s>Changing filters by clicking on the visualized data</s> 
+  <b><i>Double click on visualized data to change filters</i></b>
 
 ## Developer
 
