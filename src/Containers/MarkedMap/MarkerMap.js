@@ -64,7 +64,6 @@ const MarkerMap = (props) => {
 				filteredData = data;
 			}
 
-			console.log(categoryFilter, mediumFilter, filteredData);
 			handleData(filteredData);
 		},
 		[ categoryFilter, mediumFilter]
@@ -83,7 +82,6 @@ const MarkerMap = (props) => {
 
 	useMemo(
 		() => {
-			console.log('marked map props changed');
 			handleMediumFilter(props.mediumChange);
 			handleCategoryFilter(props.categoryChange);
 		}
@@ -110,7 +108,7 @@ const MarkerMap = (props) => {
 		latitude: parseFloat(data[0].latitude),
 		longitude: parseFloat(data[0].longitude),
 		width: '100%',
-		height: '80%',
+		height: '100%',
 		zoom: 10
 	});
 
@@ -142,116 +140,117 @@ const MarkerMap = (props) => {
 	});
 	return (
 		<div className="mapContainer">
-			<ReactMapGL
-				className="map"
-				{...viewport}
-				maxZoom={18}
-				mapboxApiAccessToken={
-					'pk.eyJ1IjoiY29kZXJyc2lkIiwiYSI6ImNrOWlyZHBmYzBibm8za3FsdG56ajE5c2QifQ.ho5n63DYciCXvzfzTD6qbA'
-				}
-				mapStyle="mapbox://styles/coderrsid/ck9jqy9i10v2c1jrrwikzkji0"
-				onViewportChange={(viewport) => {
-					setViewport(viewport);
-				}}
-				ref={mapRef}
-			>
-				{clusters.map((cluster) => {
-					const [ longitude, latitude ] = cluster.geometry.coordinates;
-					const { cluster: isCluster, point_count: pointCount } = cluster.properties;
+			<div className="map">
+				<ReactMapGL
+					{...viewport}
+					maxZoom={15}
+					mapboxApiAccessToken={
+						'pk.eyJ1IjoiY29kZXJyc2lkIiwiYSI6ImNrOWlyZHBmYzBibm8za3FsdG56ajE5c2QifQ.ho5n63DYciCXvzfzTD6qbA'
+					}
+					mapStyle="mapbox://styles/coderrsid/ck9jqy9i10v2c1jrrwikzkji0"
+					onViewportChange={(viewport) => {
+						setViewport(viewport);
+					}}
+					ref={mapRef}
+				>
+					{clusters.map((cluster) => {
+						const [ longitude, latitude ] = cluster.geometry.coordinates;
+						const { cluster: isCluster, point_count: pointCount } = cluster.properties;
 
-					if (isCluster && viewport.zoom < 15) {
+						if (isCluster && viewport.zoom < 15) {
+							return (
+								<Marker key={`cluster-${cluster.id}`} latitude={latitude} longitude={longitude}>
+									<div
+										className="cluster-marker"
+										style={{
+											width: `${10 + pointCount / points.length * 20}px`,
+											height: `${10 + pointCount / points.length * 20}px`
+										}}
+										onClick={() => {
+											const expansionZoom = Math.min(
+												supercluster.getClusterExpansionZoom(cluster.id),
+												15
+											);
+
+											setViewport({
+												...viewport,
+												latitude,
+												longitude,
+												zoom: expansionZoom,
+												transitionInterpolator: new FlyToInterpolator({
+													speed: 2
+												}),
+												transitionDuration: 'auto'
+											});
+										}}
+									>
+										{pointCount}
+									</div>
+								</Marker>
+							);
+						}
+
+						if (viewport.zoom >= 15) {
+							const points = cluster ? supercluster.getLeaves(cluster.id) : null;
+							console.log(points);
+							if (points) {
+								points.map((point) => {
+									return (
+										<Marker
+											key={`data-${point.properties.dataId}`}
+											latitude={point.geometry.coordinates[1]}
+											longitude={point.geometry.coordinates[0]}
+										>
+											<button
+												className="marker-btn"
+												onClick={(e) => {
+													e.preventDefault();
+													setSelectedLoc(point);
+												}}
+											>
+												<img src={MarkerLogo} alt="marked" />
+											</button>
+										</Marker>
+									);
+								});
+							}
+						}
+
 						return (
-							<Marker key={`cluster-${cluster.id}`} latitude={latitude} longitude={longitude}>
-								<div
-									className="cluster-marker"
-									style={{
-										width: `${10 + pointCount / points.length * 20}px`,
-										height: `${10 + pointCount / points.length * 20}px`
-									}}
-									onClick={() => {
-										const expansionZoom = Math.min(
-											supercluster.getClusterExpansionZoom(cluster.id),
-											25
-										);
-
-										setViewport({
-											...viewport,
-											latitude,
-											longitude,
-											zoom: expansionZoom,
-											transitionInterpolator: new FlyToInterpolator({
-												speed: 2
-											}),
-											transitionDuration: 'auto'
-										});
+							<Marker key={`data-${cluster.properties.dataId}`} latitude={latitude} longitude={longitude}>
+								<button
+									className="marker-btn"
+									onClick={(e) => {
+										e.preventDefault();
+										setSelectedLoc(cluster);
 									}}
 								>
-									{pointCount}
-								</div>
+									<img src={MarkerLogo} alt="marked" />
+								</button>
 							</Marker>
 						);
-					}
-
-					if (viewport.zoom >= 15) {
-						const points = isCluster ? supercluster.getLeaves(cluster.id) : null;
-						if (points) {
-							points.map((point) => {
-								return (
-									<Marker
-										key={`data-${point.properties.dataId}`}
-										latitude={point.geometry.coordinates[1]}
-										longitude={point.geometry.coordinates[0]}
-									>
-										<button
-											className="marker-btn"
-											onClick={(e) => {
-												e.preventDefault();
-												setSelectedLoc(point);
-											}}
-										>
-											<img src={MarkerLogo} alt="marked" />
-										</button>
-									</Marker>
-								);
-							});
-						}
-					}
-
-					return (
-						<Marker key={`data-${cluster.properties.dataId}`} latitude={latitude} longitude={longitude}>
-							<button
-								className="marker-btn"
-								onClick={(e) => {
-									e.preventDefault();
-									setSelectedLoc(cluster);
-								}}
-							>
-								<img src={MarkerLogo} alt="marked" />
-							</button>
-						</Marker>
-					);
-				})}
-				{selectedLoc ? (
-					<Popup
-						latitude={selectedLoc.geometry.coordinates[1]}
-						longitude={selectedLoc.geometry.coordinates[0]}
-						onClose={() => {
-							setSelectedLoc(null);
-						}}
-					>
-						<div>
-							<h2>ID : {selectedLoc.properties.dataId}</h2>
-							<p>Category : {selectedLoc.properties.category}</p>
-						</div>
-					</Popup>
-				) : null}
-			</ReactMapGL>
-			<div className="filtersContainer">
-				<div className="bg-image" />
+					})}
+					{selectedLoc ? (
+						<Popup
+							latitude={selectedLoc.geometry.coordinates[1]}
+							longitude={selectedLoc.geometry.coordinates[0]}
+							onClose={() => {
+								setSelectedLoc(null);
+							}}
+						>
+							<div>
+								<h2>ID : {selectedLoc.properties.dataId}</h2>
+								<p>Category : {selectedLoc.properties.category}</p>
+							</div>
+						</Popup>
+					) : null}
+				</ReactMapGL>
+			</div>
+			<div className="filtersContainer" id="bg-image">
 				<h2>Filter Data</h2>
 				<div className="filter">
 					<h3>Medium</h3>
-					<select onChange={(e) => handleMediumFilter(e.target.value)} value={mediumFilter}>
+					<select className="dropdown" onChange={(e) => handleMediumFilter(e.target.value)} value={mediumFilter}>
 						<option value="">Select Medium</option>
 						<option value="Web">Web</option>
 						<option value="Mobile">Mobile</option>
@@ -259,7 +258,7 @@ const MarkerMap = (props) => {
 				</div>
 				<div className="filter">
 					<h3>Travel Category</h3>
-					<select onChange={(e) => handleCategoryFilter(e.target.value)} value={categoryFilter}>
+					<select className="dropdown" onChange={(e) => handleCategoryFilter(e.target.value)} value={categoryFilter}>
 						<option value="">Select Category</option>
 						<option value="Point to Point">Point to Point</option>
 						<option value="Hourly Rental">Hourly Rental</option>

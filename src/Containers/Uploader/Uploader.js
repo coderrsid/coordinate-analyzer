@@ -4,6 +4,7 @@ import 'react-awesome-button/dist/themes/theme-blue.css';
 import './Uploader.css';
 import uploadIcon from '../../assets/uploadIcon.png';
 import Papa from 'papaparse';
+import ScrollDown from '../../Components/ScrollDown/ScrollDown';
 
 class Uploader extends Component {
 	constructor() {
@@ -27,7 +28,6 @@ class Uploader extends Component {
 			complete: this.uploadData,
 			header: true
 		});
-		this.setState({ uploaded: true });
 		this.props.uploadedHandler(true);
 	};
 
@@ -67,6 +67,7 @@ class Uploader extends Component {
 		setTimeout(() => {
 			next();
 		}, 1250);
+		this.setState({ uploaded: true });
 	};
 
 	render() {
@@ -95,6 +96,7 @@ class Uploader extends Component {
 						VISUALIZE
 					</AwesomeButtonProgress>
 				</div>
+				{this.state.uploaded ? <ScrollDown /> : null}
 			</div>
 		);
 	}
